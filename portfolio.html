@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gading Septy Marudanny — Data Scientist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F8FA;
+    --bg-alt: #FFFFFF;
+    --surface: #FFFFFF;
+    --text: #12161C;
+    --text-muted: #57626F;
+    --accent-teal: #0E9488;
+    --accent-amber: #C97A1F;
+    --border: #E1E5EA;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B0F14;
+      --bg-alt: #0F141C;
+      --surface: #171F2B;
+      --text: #EDF1F7;
+      --text-muted: #96A2B5;
+      --accent-teal: #45D9C9;
+      --accent-amber: #F5A94E;
+      --border: #232C3A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0F14;
+    --bg-alt: #0F141C;
+    --surface: #171F2B;
+    --text: #EDF1F7;
+    --text-muted: #96A2B5;
+    --accent-teal: #45D9C9;
+    --accent-amber: #F5A94E;
+    --border: #232C3A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; }
+  a { color: inherit; }
+
+  /* Justified body copy */
+  p.justify, .tl-item ul li {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+
+  /* Ambient moving background */
+  .bg-field {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .bg-field::before, .bg-field::after {
+    content: '';
+    position: absolute;
+    width: 620px;
+    height: 620px;
+    border-radius: 50%;
+    filter: blur(110px);
+    opacity: 0.16;
+  }
+  .bg-field::before {
+    background: var(--accent-teal);
+    top: -180px;
+    left: -160px;
+    animation: driftA 22s ease-in-out infinite alternate;
+  }
+  .bg-field::after {
+    background: var(--accent-amber);
+    bottom: -220px;
+    right: -160px;
+    animation: driftB 26s ease-in-out infinite alternate;
+  }
+  @keyframes driftA {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(80px, 60px) scale(1.15); }
+  }
+  @keyframes driftB {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-70px, -50px) scale(1.1); }
+  }
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 56px 56px;
+    opacity: 0.35;
+    mask-image: linear-gradient(180deg, transparent, rgba(0,0,0,0.5) 12%, rgba(0,0,0,0.5) 70%, transparent);
+  }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* Reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+  .logo span { color: var(--accent-teal); }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    font-size: 0.9rem;
+  }
+  .nav-links a {
+    position: relative;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+    padding-bottom: 3px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--accent-teal);
+    transition: width 0.25s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-toggle { display: none; }
+
+  @media (max-width: 720px) {
+    .nav-links {
+      position: fixed;
+      top: 62px;
+      left: 0;
+      right: 0;
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      gap: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .nav-links.open { max-height: 320px; }
+    .nav-links li { padding: 14px 28px; border-top: 1px solid var(--border); }
+    .nav-toggle {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .nav-toggle span {
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      display: block;
+    }
+  }
+
+  /* HERO */
+  .hero {
+    padding: 88px 0 72px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; padding: 56px 0 40px; }
+  }
+  .eyebrow-role {
+    font-family: var(--font-body);
+    color: var(--accent-amber);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 14px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.1s;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5.2vw, 3.6rem);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.25s;
+  }
+  .hero p.lede {
+    margin-top: 20px;
+    font-size: 1.08rem;
+    color: var(--text-muted);
+    max-width: 52ch;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.42s;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-actions {
+    margin-top: 32px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.58s;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .btn-primary {
+    background: var(--accent-teal);
+    color: #06201C;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px -8px var(--accent-teal);
+  }
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent-teal);
+    transform: translateY(-2px);
+  }
+
+  .hero-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.5s;
+    transition: border-color 0.3s ease;
+  }
+  .hero-chart:hover { border-color: var(--accent-teal); }
+  .hero-chart-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .hero-chart svg { width: 100%; height: auto; display: block; }
+  .chart-line {
+    fill: none;
+    stroke: var(--accent-teal);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 620;
+    stroke-dashoffset: 620;
+    animation: draw 1.8s ease forwards 0.9s;
+  }
+  .chart-fill { opacity: 0; animation: fadein 1s ease forwards 2s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes fadein { to { opacity: 1; } }
+  .chart-dot {
+    fill: var(--accent-amber);
+    opacity: 0;
+    animation: fadein 0.4s ease forwards 2.6s, pulse 2s ease-in-out infinite 3s;
+    transform-origin: center;
+  }
+  @keyframes pulse {
+    0%, 100% { r: 4.5; opacity: 1; }
+    50% { r: 6.5; opacity: 0.6; }
+  }
+
+  /* SECTIONS */
+  section { padding: 64px 0; border-top: 1px solid var(--border); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 600;
+  }
+  .section-note { color: var(--text-muted); font-size: 0.92rem; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px;
+  }
+  @media (max-width: 720px) { .about-grid { grid-template-columns: 1fr; } }
+  .about-grid p { color: var(--text-muted); font-size: 1rem; }
+  .stat-list { display: flex; flex-direction: column; gap: 20px; }
+  .stat {
+    border-left: 2px solid var(--accent-teal);
+    padding-left: 16px;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+  .stat:hover { transform: translateX(4px); border-color: var(--accent-amber); }
+  .stat .num {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+  .stat .label { color: var(--text-muted); font-size: 0.85rem; }
+
+  /* SKILLS */
+  .skill-groups {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 720px) { .skill-groups { grid-template-columns: 1fr; } }
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .skill-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-teal);
+    box-shadow: 0 14px 30px -18px var(--accent-teal);
+  }
+  .skill-card h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--accent-teal);
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-size: 0.82rem;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .chip:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-amber);
+    color: var(--text);
+  }
+
+  /* EXPERIENCE TIMELINE */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px; top: 6px; bottom: 6px;
+    width: 1px;
+    background: var(--border);
+  }
+  .tl-item { position: relative; padding-bottom: 44px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -28px; top: 5px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent-amber);
+    transition: box-shadow 0.3s ease;
+  }
+  .tl-item.in-view::before {
+    animation: dotPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-amber) 45%, transparent); }
+    50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-amber) 0%, transparent); }
+  }
+  .tl-date {
+    font-size: 0.8rem;
+    color: var(--accent-amber);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .tl-role {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+  .tl-org { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 10px; font-style: italic; }
+  .tl-item ul { padding-left: 18px; color: var(--text-muted); font-size: 0.94rem; display: flex; flex-direction: column; gap: 6px; }
+
+  /* EDUCATION */
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .edu-grid { grid-template-columns: 1fr; } }
+  .edu-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    background: var(--surface);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .edu-card:hover { transform: translateY(-4px); border-color: var(--accent-teal); }
+  .edu-card .tl-date { margin-bottom: 8px; }
+  .edu-card h3 { font-family: var(--font-display); font-size: 1.02rem; font-weight: 600; margin-bottom: 4px; }
+  .edu-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* CONTACT / FOOTER */
+  footer {
+    padding: 72px 0 48px;
+    text-align: center;
+  }
+  footer h2 { font-size: 2rem; margin-bottom: 14px; }
+  footer p.lede { color: var(--text-muted); max-width: 46ch; margin: 0 auto 32px; text-align: center; }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .foot-meta {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-field"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">GSM<span>.</span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">Tentang</a></li>
+      <li><a href="#skills">Keahlian</a></li>
+      <li><a href="#experience">Pengalaman</a></li>
+      <li><a href="#education">Pendidikan</a></li>
+      <li><a href="#contact">Kontak</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<header class="wrap hero">
+  <div>
+    <div class="eyebrow-role">Data Scientist · Sistem & Analitik Data</div>
+    <h1>Gading Septy<br>Marudanny</h1>
+    <p class="lede justify">
+      Mengubah data mentah dan proses operasional menjadi sistem yang terukur —
+      dari dashboard business intelligence di sektor energi nasional
+      hingga arsitektur ERP yang menghemat ratusan jam kerja manual.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#contact">Hubungi Saya</a>
+      <a class="btn btn-ghost" href="#experience">Lihat Pengalaman</a>
+    </div>
+  </div>
+  <div class="hero-chart">
+    <div class="hero-chart-label">
+      <span>Efisiensi Operasional — Proyek ERP</span>
+      <span>↑ 70%</span>
+    </div>
+    <svg viewBox="0 0 320 140" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--accent-teal)" stop-opacity="0.28"/>
+          <stop offset="100%" stop-color="var(--accent-teal)" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path class="chart-fill" fill="url(#fillGrad)" d="M0,120 L40,110 L80,95 L120,98 L160,70 L200,60 L240,38 L280,30 L320,18 L320,140 L0,140 Z"/>
+      <path class="chart-line" d="M0,120 L40,110 L80,95 L120,98 L160,70 L200,60 L240,38 L280,30 L320,18"/>
+      <circle class="chart-dot" cx="320" cy="18" r="4.5"/>
+    </svg>
+  </div>
+</header>
+
+<section id="about" class="wrap reveal">
+  <div class="section-head">
+    <h2>Tentang</h2>
+    <span class="section-note">Ringkasan profesional</span>
+  </div>
+  <div class="about-grid">
+    <p class="justify">
+      Data Scientist tersertifikasi BNSP dengan latar belakang kuat dalam
+      machine learning, analisis data kuantitatif, dan pengembangan sistem
+      berbasis web. Memiliki pengalaman industri di sektor energi nasional
+      (PT PGN Tbk) dalam Business Intelligence dan pelaporan operasional,
+      serta rekam jejak memimpin perancangan sistem ERP internal dan data
+      pipeline end-to-end. Terbiasa memadukan pemodelan statistik, optimasi
+      basis data, dan efisiensi operasional untuk mendukung pengambilan
+      keputusan bisnis berbasis data.
+    </p>
+    <div class="stat-list">
+      <div class="stat">
+        <div class="num" data-count="3">0</div>
+        <div class="label">Proyek utama — BI, ERP, dan riset NLP</div>
+      </div>
+      <div class="stat">
+        <div class="num"><span data-count="70">0</span>%</div>
+        <div class="label">Reduksi waktu rekapitulasi manual (proyek ERP)</div>
+      </div>
+      <div class="stat">
+        <div class="num">BNSP</div>
+        <div class="label">Sertifikasi Profesi Data Scientist, 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="wrap reveal">
+  <div class="section-head">
+    <h2>Keahlian Teknis</h2>
+    <span class="section-note">Alat dan metode yang digunakan sehari-hari</span>
+  </div>
+  <div class="skill-groups">
+    <div class="skill-card">
+      <h3>Bahasa Pemrograman & Query</h3>
+      <div class="chip-row">
+        <span class="chip">Python</span>
+        <span class="chip">SQL (Window Functions)</span>
+        <span class="chip">PHP</span>
+        <span class="chip">JavaScript</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <h3>Data Science & Analytics</h3>
+      <div class="chip-row">
+        <span class="chip">Google Looker Studio</span>
+        <span class="chip">Pandas</span>
+        <span class="chip">NumPy</span>
+        <span class="chip">Scikit-Learn</span>
+        <span class="chip">K-Nearest Neighbors</span>
+        <span class="chip">Sentiment Analysis</span>
+        <span class="chip">EDA</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <h3>Web Frameworks & Tools</h3>
+      <div class="chip-row">
+        <span class="chip">Laravel</span>
+        <span class="chip">Filament PHP</span>
+        <span class="chip">Tailwind CSS</span>
+        <span class="chip">Git/GitHub</span>
+        <span class="chip">Docker</span>
+        <span class="chip">RESTful API</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <h3>Cloud & Tata Kelola Sistem</h3>
+      <div class="chip-row">
+        <span class="chip">Cloud Computing (IaaS/PaaS/SaaS)</span>
+        <span class="chip">NIST Standards</span>
+        <span class="chip">Pemodelan Basis Data Relasional</span>
+        <span class="chip">System Architecture</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="wrap reveal">
+  <div class="section-head">
+    <h2>Pengalaman Kerja & Proyek</h2>
+    <span class="section-note">Urutan kronologis</span>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">September 2026 – Sekarang</div>
+      <div class="tl-role">Lead Systems Developer & Project Consultant</div>
+      <div class="tl-org">Proyek Sistem ERP Travel Haji & Umrah</div>
+      <ul>
+        <li>Memimpin perancangan arsitektur back-office ERP terpadu (Laravel 11 & Filament v3) yang mengelola pencatatan ratusan data transaksi serta kepatuhan administratif jamaah.</li>
+        <li>Membangun mesin validasi otomatis (Automated Readiness Engine) untuk audit silang kelengkapan berkas fisik (Paspor, Visa, Vaksin) dan status pelunasan kas masuk secara real-time.</li>
+        <li>Mengembangkan generator manifes 1-klik berbasis spreadsheet standar maskapai penerbangan dan muassasah, mereduksi waktu rekapitulasi manual operasional hingga 70%.</li>
+        <li>Merancang website publik responsif dengan fitur pengecekan berkas mandiri berbasis NIK untuk transparansi informasi jamaah.</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Januari 2026 – Agustus 2026</div>
+      <div class="tl-role">Data Scientist & Peneliti Proyek Skripsi</div>
+      <div class="tl-org">Riset independen</div>
+      <ul>
+        <li>Mengimplementasikan algoritma K-Nearest Neighbors (KNN) dan metode pelabelan leksikon untuk menganalisis sentimen ribuan ulasan publik terhadap platform e-commerce nasional Shopee.</li>
+        <li>Merancang pipeline Natural Language Processing (NLP) terstruktur mencakup text preprocessing (cleaning, case folding, filtering, tokenizing, stemming) dan TF-IDF weighting.</li>
+        <li>Melakukan pengujian kinerja klasifikasi model menggunakan Confusion Matrix dengan variasi nilai parameter K (3, 5, dan 7) untuk mengidentifikasi tingkat akurasi optimal.</li>
+        <li>Menyusun rekomendasi teknis berbasis temuan pola kepuasan pengguna untuk evaluasi peningkatan mutu layanan digital.</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Juni 2025 – Juli 2025</div>
+      <div class="tl-role">IT & Data Operations Intern</div>
+      <div class="tl-org">PT Perusahaan Gas Negara Tbk (PGN)</div>
+      <ul>
+        <li>Mengembangkan dashboard monitoring interaktif menggunakan Google Looker Studio untuk memvisualisasikan metrik operasional dan performa distribusi gas secara berkala.</li>
+        <li>Melakukan integrasi berbagai sumber data, pembersihan data mentah, dan pemformatan dataset agar akurat dan mudah dipahami stakeholders.</li>
+        <li>Menyusun dokumentasi teknis dan rekapitulasi data berkala guna mempercepat penyusunan laporan divisi.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="education" class="wrap reveal">
+  <div class="section-head">
+    <h2>Pendidikan & Sertifikasi</h2>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="tl-date">2026</div>
+      <h3>Sertifikasi Profesi Data Scientist</h3>
+      <p>Badan Nasional Sertifikasi Profesi (BNSP)</p>
+    </div>
+    <div class="edu-card">
+      <div class="tl-date">2026</div>
+      <h3>Sarjana (S1), Fakultas Ilmu Komputer</h3>
+      <p>Universitas Muslim Indonesia — IPK 3.53/4.00</p>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" class="wrap reveal">
+  <h2>Mari terhubung</h2>
+  <p class="lede justify">Terbuka untuk peluang di bidang data science, business intelligence, maupun pengembangan sistem berbasis data.</p>
+  <div class="contact-links">
+    <a class="btn btn-primary" href="mailto:gadingsepty4@gmail.com">Email Saya</a>
+    <a class="btn btn-ghost" href="https://www.linkedin.com/in/gading-septy-b75903371" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn btn-ghost" href="https://github.com/Gadingsepty" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn btn-ghost" href="tel:+6281341181498">+62 813-4118-1498</a>
+  </div>
+  <div class="foot-meta">
+    Makassar, Sulawesi Selatan &nbsp;·&nbsp; Gading Septy Marudanny &nbsp;·&nbsp; 2026
+  </div>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal, .tl-item');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // Count-up stats
+  const counters = document.querySelectorAll('[data-count]');
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.getAttribute('data-count'), 10);
+      const duration = 1100;
+      const start = performance.now();
+      function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      countObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => countObserver.observe(el));
+</script>
+
+</body>
+</html>
